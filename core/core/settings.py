@@ -38,11 +38,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accounts',
+<<<<<<< Updated upstream
     'todo',
     'rest_framework',
     'django_filters',
     'coreapi',
     'drf_spectacular',
+=======
+    'django_filters',
+    'todo'
+>>>>>>> Stashed changes
 ]
 
 MIDDLEWARE = [
