@@ -4,7 +4,7 @@ from .serializers import TaskSerializer
 from rest_framework import permissions
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-
+from django_filters.rest_framework import DjangoFilterBackend
 
 # class TodoListView(viewsets.ModelViewSet)
 #     queryset = Task.objects.all()
@@ -58,6 +58,9 @@ class TaskViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = TaskSerializer
     queryset = Task.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['complete']
+
 
 
     def list(self, request):

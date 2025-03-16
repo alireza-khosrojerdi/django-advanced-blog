@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'todo',
     'rest_framework',
     'django_filters',
-    'coreapi'
+    'coreapi',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -137,4 +138,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # restframework settings 
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'}
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'}
+
+
+
+#DRF API settings 
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Todo Project API',
+    'DESCRIPTION': 'This is a Todo app for your activities',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # OTHER SETTINGS
+}
