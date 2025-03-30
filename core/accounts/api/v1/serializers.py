@@ -29,9 +29,9 @@ class LoginSerializer(serializers.Serializer):
                 msg = _('Unable to log in with provided credentials.')
                 raise serializers.ValidationError(msg, code='authorization')
             
-            else:
-                msg = _("Must include 'username' and 'password'.")
-                raise serializers.ValidationError(msg , code='authorization')
+        else:
+            msg = _("Must include 'username' and 'password'.")
+            raise serializers.ValidationError(msg , code='authorization')
             
         data['user'] = user
         return data

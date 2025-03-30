@@ -14,7 +14,7 @@ class AuthViewSet(viewsets.GenericViewSet):
     permission_classes = [
         AllowAny,
     ]
-    serializer_classe = EmptySerializer
+    serializer_class = EmptySerializer
     serializer_classes = {
         'login': LoginSerializer,
         'register': RegisterSerializer,
@@ -30,9 +30,9 @@ class AuthViewSet(viewsets.GenericViewSet):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user = serializer.validated_data.get("user")
-        if user is not None and user.is_active:
-            login(request, user)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            if user is not None and user.is_active:
+                login(request, user)
+                return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     @action(
@@ -76,41 +76,41 @@ class AuthViewSet(viewsets.GenericViewSet):
         return super().get_serializer_class()
     
 
-class LogoutViewSet(viewsets.ViewSet):
-    def retrieve(self,request, pk=None):
-        logout(request)
-        return Response(
-            {"non_field_errors": "successfully logged out"},
-            status=status.HTTP_200_OK,
-        )
+# class LogoutViewSet(viewsets.ViewSet):
+#     def retrieve(self,request, pk=None):
+#         logout(request)
+#         return Response(
+#             {"non_field_errors": "successfully logged out"},
+#             status=status.HTTP_200_OK,
+#         )
     
 
-class RegisterViewSet(viewsets.ViewSet):
-    serializer_class = RegisterSerializer
+# class RegisterViewSet(viewsets.ViewSet):
+#     serializer_class = RegisterSerializer
 
-    def create(self, request):
-        serializer = RegisterSerializer(data=request.data, many=False)
-        if serializer.is_valid():
-            username = serializer.validated_data['username']
-            password = serializer.validated_data['password1']
-            user = User.objects.create_user(
-                username=username, password=password
-            )
-            authenticate(request, username=username, password=password)
-            login(request, user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+#     def create(self, request):
+#         serializer = RegisterSerializer(data=request.data, many=False)
+#         if serializer.is_valid():
+#             username = serializer.validated_data['username']
+#             password = serializer.validated_data['password1']
+#             user = User.objects.create_user(
+#                 username=username, password=password
+#             )
+#             authenticate(request, username=username, password=password)
+#             login(request, user)
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-class LoginViewSet(viewsets.ViewSet):
-    serializer_class = LoginSerializer
+# class LoginViewSet(viewsets.ViewSet):
+#     serializer_class = LoginSerializer
 
 
-    def create(self, request, *args, **kwargs):
-        serializer = LoginSerializer(data=request.data, many=False)
-        if serializer.is_valid():
-            user = serializer.validated_data.get('user')
-            if user is not None and user.is_active:
-                login(request, user)
-                return Response(serializer.data , status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def create(self, request, *args, **kwargs):
+#         serializer = LoginSerializer(data=request.data, many=False)
+#         if serializer.is_valid():
+#             user = serializer.validated_data.get('user')
+#             if user is not None and user.is_active:
+#                 login(request, user)
+#                 return Response(serializer.data , status=status.HTTP_200_OK)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     

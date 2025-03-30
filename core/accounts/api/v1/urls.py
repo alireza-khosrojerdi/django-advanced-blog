@@ -1,8 +1,6 @@
-from .views import RegisterViewSet, LoginViewSet, LogoutViewSet
+# from .views import RegisterViewSet, LoginViewSet, LogoutViewSet
 from .views import AuthViewSet
 from rest_framework.routers import DefaultRouter
-
-app_name = 'accounts'
 
 
 router = DefaultRouter()
