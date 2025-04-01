@@ -7,18 +7,24 @@ class TaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Task
-        fields = ['id', 'user', 'title', 'complete',
-                  'created_date', 'updated_date']
-        read_only_fields = ['user']
+        fields = [
+            "id",
+            "user",
+            "title",
+            "complete",
+            "created_date",
+            "updated_date",
+        ]
+        read_only_fields = ["user"]
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        rep['user'] = UserSerializer(instance.user).data
+        rep["user"] = UserSerializer(instance.user).data
         return rep
-    
+
 
 class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id','username']
+        fields = ["id", "username"]

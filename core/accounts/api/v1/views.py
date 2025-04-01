@@ -5,20 +5,19 @@ from .serializers import (
     EmptySerializer,
     CustomAuthTokenSerializer,
     CustomTokenObtainSerializer,
-    ChangePasswordSerializer
-                          )
+    ChangePasswordSerializer,
+)
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login,logout
+from django.contrib.auth import authenticate, login, logout
 from rest_framework import status, generics
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from django.core.exceptions import ImproperlyConfigured
-from rest_framework.permissions import AllowAny,IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework_simplejwt.views import TokenObtainPairView
-
 
 
 class AuthViewSet(viewsets.GenericViewSet):
@@ -27,13 +26,13 @@ class AuthViewSet(viewsets.GenericViewSet):
     ]
     serializer_class = EmptySerializer
     serializer_classes = {
-        'login': LoginSerializer,
-        'register': RegisterSerializer,
+        "login": LoginSerializer,
+        "register": RegisterSerializer,
     }
 
     @action(
         methods=[
-            'POST',
+            "POST",
         ],
         detail=False,
     )
@@ -45,7 +44,7 @@ class AuthViewSet(viewsets.GenericViewSet):
                 login(request, user)
                 return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
     @action(
         methods=[
             "POST",
@@ -55,16 +54,16 @@ class AuthViewSet(viewsets.GenericViewSet):
     def register(self, request):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            username = serializer.validated_data['username']
-            password = serializer.validated_data['password1']
+            username = serializer.validated_data["username"]
+            password = serializer.validated_data["password1"]
             user = User.objects.create_user(
                 username=username, password=password
             )
             authenticate(request, username=username, password=password)
             login(request, user)
-            return Response(serializer.data , status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
     @action(
         methods=[
             "GET",
@@ -85,32 +84,36 @@ class AuthViewSet(viewsets.GenericViewSet):
         if self.action in self.serializer_classes.keys():
             return self.serializer_classes[self.action]
         return super().get_serializer_class()
-    
+
 
 class CustomObtaionAuthToken(ObtainAuthToken):
     serializer_class = CustomAuthTokenSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(
-            data=request.data,
-            context={'request': request}
-            )
+            data=request.data, context={"request": request}
+        )
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
+        user = serializer.validated_data["user"]
         token, created = Token.objects.get_or_create(user=user)
-        return Response({
-            'token': token.key,
-            'user_id': user.pk,
-            'username': user.username,
-        })
-    
+        return Response(
+            {
+                "token": token.key,
+                "user_id": user.pk,
+                "username": user.username,
+            }
+        )
+
+
 class CustomDiscardAuthToken(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
         request.user.auth_token.delete()
-        return Response('Token has been deleted.', status=status.HTTP_204_NO_CONTENT)
-    
+        return Response(
+            "Token has been deleted.", status=status.HTTP_204_NO_CONTENT
+        )
+
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainSerializer
@@ -124,30 +127,26 @@ class ChangePasswordView(generics.GenericAPIView):
     def get_object(self, queryset=None):
         obj = self.request.user
         return obj
-    
 
     def put(self, request, *args, **kwargs):
         self.object = self.get_object()
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             if not self.object.check_password(
-                serializer.data.get('old_password')
+                serializer.data.get("old_password")
             ):
                 return Response(
                     {"old_password": "wrong password"},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
-            self.object.set_password(serializer.data.get('new_password'))
+            self.object.set_password(serializer.data.get("new_password"))
             self.object.save()
             return Response(
                 {"detail": "Password has been changed successfully"},
                 status=status.HTTP_200_OK,
             )
-        return Response(
-            serializer.errors, status=status.HTTP_400_BAD_REQUEST
-        )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        
 
 # class LogoutViewSet(viewsets.ViewSet):
 #     def retrieve(self,request, pk=None):
@@ -156,7 +155,7 @@ class ChangePasswordView(generics.GenericAPIView):
 #             {"non_field_errors": "successfully logged out"},
 #             status=status.HTTP_200_OK,
 #         )
-    
+
 
 # class RegisterViewSet(viewsets.ViewSet):
 #     serializer_class = RegisterSerializer
@@ -185,5 +184,3 @@ class ChangePasswordView(generics.GenericAPIView):
 #                 login(request, user)
 #                 return Response(serializer.data , status=status.HTTP_200_OK)
 #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    
