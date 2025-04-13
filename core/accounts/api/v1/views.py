@@ -56,9 +56,7 @@ class AuthViewSet(viewsets.GenericViewSet):
         if serializer.is_valid():
             username = serializer.validated_data["username"]
             password = serializer.validated_data["password1"]
-            user = User.objects.create_user(
-                username=username, password=password
-            )
+            user = User.objects.create_user(username=username, password=password)
             authenticate(request, username=username, password=password)
             login(request, user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -77,9 +75,7 @@ class AuthViewSet(viewsets.GenericViewSet):
 
     def get_serializer_class(self):
         if not isinstance(self.serializer_classes, dict):
-            raise ImproperlyConfigured(
-                "serializer_classes should be a dict mapping."
-            )
+            raise ImproperlyConfigured("serializer_classes should be a dict mapping.")
 
         if self.action in self.serializer_classes.keys():
             return self.serializer_classes[self.action]
@@ -110,9 +106,7 @@ class CustomDiscardAuthToken(APIView):
 
     def post(self, request):
         request.user.auth_token.delete()
-        return Response(
-            "Token has been deleted.", status=status.HTTP_204_NO_CONTENT
-        )
+        return Response("Token has been deleted.", status=status.HTTP_204_NO_CONTENT)
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -132,9 +126,7 @@ class ChangePasswordView(generics.GenericAPIView):
         self.object = self.get_object()
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            if not self.object.check_password(
-                serializer.data.get("old_password")
-            ):
+            if not self.object.check_password(serializer.data.get("old_password")):
                 return Response(
                     {"old_password": "wrong password"},
                     status=status.HTTP_400_BAD_REQUEST,

@@ -68,11 +68,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self, *args, **kwargs):
 
-        return (
-            super()
-            .get_queryset(*args, **kwargs)
-            .filter(user=self.request.user)
-        )
+        return super().get_queryset(*args, **kwargs).filter(user=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

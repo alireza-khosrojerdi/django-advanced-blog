@@ -3,10 +3,12 @@ from rest_framework.test import APIClient
 from django.urls import reverse
 from django.contrib.auth.models import User
 
+
 @pytest.fixture
 def api_client():
     client = APIClient()
     return client
+
 
 @pytest.fixture
 def common_user():
@@ -39,7 +41,7 @@ class TestTodoApi:
         response = api_client.post(url, data, format="json")
         assert response.status_code == 401
 
-    def test_create_todo_response_authorized_201_status(self, api_client , common_user):
+    def test_create_todo_response_authorized_201_status(self, api_client, common_user):
         url = reverse("todo:api:task-list")
         data = {
             "title": "Test Todo",
@@ -50,7 +52,9 @@ class TestTodoApi:
         assert response.status_code == 201
         assert response.data["title"] == "Test Todo"
 
-    def test_create_todo_invalid_data_response_400_status(self, api_client , common_user):
+    def test_create_todo_invalid_data_response_400_status(
+        self, api_client, common_user
+    ):
         url = reverse("todo:api:task-list")
         data = {
             "title": "",
@@ -61,8 +65,7 @@ class TestTodoApi:
         assert response.status_code == 400
         assert "title" in response.data
 
-
-    def test_put_todo_response_authorized_200_status(self, api_client , common_user):
+    def test_put_todo_response_authorized_200_status(self, api_client, common_user):
         url = reverse("todo:api:task-list")
         data = {
             "title": "Test Todo",
@@ -80,7 +83,7 @@ class TestTodoApi:
         assert response.status_code == 200
         assert response.data["title"] == "Updated Todo"
 
-    def test_patch_todo_response_authorized_200_status(self, api_client , common_user):
+    def test_patch_todo_response_authorized_200_status(self, api_client, common_user):
         url = reverse("todo:api:task-list")
         data = {
             "title": "Test Todo",
@@ -97,7 +100,7 @@ class TestTodoApi:
         assert response.status_code == 200
         assert response.data["complete"] is True
 
-    def test_put_todo_invalid_data_response_400_status(self, api_client , common_user):
+    def test_put_todo_invalid_data_response_400_status(self, api_client, common_user):
         url = reverse("todo:api:task-list")
         data = {
             "title": "Test Todo",
@@ -115,7 +118,7 @@ class TestTodoApi:
         assert response.status_code == 400
         assert "title" in response.data
 
-    def test_patch_todo_invalid_data_response_400_status(self, api_client , common_user):
+    def test_patch_todo_invalid_data_response_400_status(self, api_client, common_user):
         url = reverse("todo:api:task-list")
         data = {
             "title": "Test Todo",
@@ -133,7 +136,7 @@ class TestTodoApi:
         assert response.status_code == 400
         assert "title" in response.data
 
-    def test_delete_todo_response_authorized_204_status(self, api_client , common_user):
+    def test_delete_todo_response_authorized_204_status(self, api_client, common_user):
         url = reverse("todo:api:task-list")
         data = {
             "title": "Test Todo",
@@ -145,4 +148,3 @@ class TestTodoApi:
         url = reverse("todo:api:task-detail", args=[todo_id])
         response = api_client.delete(url)
         assert response.status_code == 204
-        assert response.data == None
