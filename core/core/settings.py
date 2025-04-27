@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "coreapi",
     "drf_spectacular",
     "rest_framework_simplejwt",
+    "django_celery_beat",
 ]
 
 MIDDLEWARE = [
@@ -163,3 +164,8 @@ SPECTACULAR_SETTINGS = {
     "SERVE_INCLUDE_SCHEMA": False,
     # OTHER SETTINGS
 }
+
+
+
+# Celery settings
+CELERY_BROKER_URL = "redis://redis:6379/1"

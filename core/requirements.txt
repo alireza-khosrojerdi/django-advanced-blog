@@ -52,3 +52,6 @@ typing_extensions==4.12.2
 uritemplate==4.1.1
 urllib3==2.2.3
 zipp==3.20.2
+celery
+redis
+django-celery-beat
