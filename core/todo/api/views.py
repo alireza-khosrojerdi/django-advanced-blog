@@ -5,6 +5,10 @@ from rest_framework import permissions
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
+import requests
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+
 
 # class TodoListView(viewsets.ModelViewSet)
 #     queryset = Task.objects.all()
@@ -72,3 +76,12 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+        
+
+class OpenWeatherViewSet(viewsets.ViewSet):
+
+
+    @method_decorator(cache_page(60 * 20))
+    def list(self, request, *args, **kwargs):
+        get_info = requests.get('https://api.openweathermap.org/data/2.5/weather?q=Tehran&lang=fa&units=metric&appid=971219b8655bd2161e8bba8c6fb9e569').json()
+        return Response(get_info)
