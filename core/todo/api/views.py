@@ -80,7 +80,6 @@ class TaskViewSet(viewsets.ModelViewSet):
 
 class OpenWeatherViewSet(viewsets.ViewSet):
 
-
     @method_decorator(cache_page(60 * 20))
     def list(self, request, *args, **kwargs):
         get_info = requests.get('https://api.openweathermap.org/data/2.5/weather?q=Tehran&lang=fa&units=metric&appid=971219b8655bd2161e8bba8c6fb9e569').json()
