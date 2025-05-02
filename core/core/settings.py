@@ -94,6 +94,17 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': config('DB_ENGINE', default="django.db.backends.sqlite3"),
+#         'NAME': config('DB_NAME', default=BASE_DIR / "db.sqlite3"),
+#         'USER': config('DB_USERNAME', default=""),
+#         'PASSWORD': config('DB_PASSWORD', default=""),
+#         'HOST': config('DB_HOST', default="localhost"),
+#         'PORT': config('DB_PORT', default=""),
+#     }
+# }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -169,3 +180,4 @@ SPECTACULAR_SETTINGS = {
 
 # Celery settings
 CELERY_BROKER_URL = "redis://redis:6379/1"
+# CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
